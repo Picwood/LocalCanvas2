@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 211 100% 99%;
+  --secondary: 60 4.8% 95.9%;
+  --secondary-foreground: 24 9.8% 10%;
+  --accent: 60 4.8% 95.9%;
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 20 14.3% 4.1%;
+  --radius: 0.5rem;
+  
+  /* Canvas-specific colors */
+  --canvas-bg: 240 10% 8%;  /* #0F0F23 */
+  --canvas-surface: 240 15% 11%;  /* #1A1B3A */
+  --canvas-border: 240 15% 18%;  /* #2E2E5D */
+  --canvas-text: 210 40% 96%;  /* #F1F5F9 */
+  --canvas-text-muted: 215 20% 65%;  /* #94A3B8 */
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 211 100% 99%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-canvas-bg {
+    background-color: hsl(var(--canvas-bg));
+  }
+  
+  .bg-canvas-surface {
+    background-color: hsl(var(--canvas-surface));
+  }
+  
+  .border-canvas-border {
+    border-color: hsl(var(--canvas-border));
+  }
+  
+  .text-canvas-text {
+    color: hsl(var(--canvas-text));
+  }
+  
+  .text-canvas-text-muted {
+    color: hsl(var(--canvas-text-muted));
+  }
+  
+  .font-inter {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Custom scrollbar for canvas areas */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--canvas-border)) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--canvas-border));
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--canvas-text-muted));
+}
+
+/* Prose styling for markdown content */
+.prose-invert {
+  --tw-prose-body: hsl(var(--canvas-text));
+  --tw-prose-headings: hsl(var(--canvas-text));
+  --tw-prose-lead: hsl(var(--canvas-text-muted));
+  --tw-prose-links: hsl(207 90% 54%);
+  --tw-prose-bold: hsl(var(--canvas-text));
+  --tw-prose-counters: hsl(var(--canvas-text-muted));
+  --tw-prose-bullets: hsl(var(--canvas-text-muted));
+  --tw-prose-hr: hsl(var(--canvas-border));
+  --tw-prose-quotes: hsl(var(--canvas-text));
+  --tw-prose-quote-borders: hsl(var(--canvas-border));
+  --tw-prose-captions: hsl(var(--canvas-text-muted));
+  --tw-prose-code: hsl(var(--canvas-text));
+  --tw-prose-pre-code: hsl(var(--canvas-text));
+  --tw-prose-pre-bg: hsl(var(--canvas-surface));
+  --tw-prose-th-borders: hsl(var(--canvas-border));
+  --tw-prose-td-borders: hsl(var(--canvas-border));
+}
