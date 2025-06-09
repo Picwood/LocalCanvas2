@@ -15,18 +15,18 @@ if (!fs.existsSync(uploadDir)) {
 const upload = multer({
   dest: uploadDir,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
+    fileSize: 50 * 1024 * 1024, // 50MB limit for HTML files with embedded images
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
       'image/jpeg', 'image/png', 'image/gif', 'image/svg+xml',
       'application/pdf',
-      'text/markdown', 'text/plain'
+      'text/html', 'text/plain'
     ];
-    if (allowedTypes.includes(file.mimetype) || file.originalname.endsWith('.md')) {
+    if (allowedTypes.includes(file.mimetype) || file.originalname.endsWith('.html')) {
       cb(null, true);
     } else {
-      cb(new Error('File type not allowed'), false);
+      cb(new Error('File type not allowed'));
     }
   }
 });
@@ -103,42 +103,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/files/upload", upload.array('files'), async (req, res) => {
+  app.get("/api/files/:id", async (req, res) => {
     try {
-      if (!req.files || !Array.isArray(req.files)) {
-        return res.status(400).json({ message: "No files uploaded" });
+      const id = parseInt(req.params.id);
+      console.log("Fetching file metadata for ID:", id);
+      const file = await storage.getUploadedFile(id);
+      if (!file) {
+        console.log("File not found:", id);
+        return res.status(404).json({ message: "File not found" });
       }
-
-      const uploadedFiles = [];
-      for (const file of req.files) {
-        const fileData = {
-          filename: file.filename,
-          originalName: file.originalname,
-          mimeType: file.mimetype,
-          size: file.size,
-          path: file.path,
-        };
-
-        const validatedData = insertUploadedFileSchema.parse(fileData);
-        const savedFile = await storage.createUploadedFile(validatedData);
-        uploadedFiles.push(savedFile);
-      }
-
-      res.status(201).json(uploadedFiles);
+      console.log("File found:", file);
+      res.json(file);
     } catch (error) {
-      res.status(400).json({ message: "Failed to upload files" });
+      console.error("Error fetching file:", error);
+      res.status(500).json({ message: "Failed to fetch file" });
     }
+  });
+
+  app.post("/api/files/upload", (req, res) => {
+    upload.array('files')(req, res, async (err) => {
+      if (err) {
+        console.error("Multer upload error:", err);
+        
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(413).json({ 
+            message: "File too large", 
+            error: "File size exceeds 50MB limit. Please reduce file size or compress images."
+          });
+        }
+        
+        if (err.message === 'File type not allowed') {
+          return res.status(400).json({ 
+            message: "File type not allowed", 
+            error: "Only HTML, PDF, image files (JPEG, PNG, GIF, SVG) and plain text files are supported."
+          });
+        }
+        
+        return res.status(400).json({ 
+          message: "Upload failed", 
+          error: err.message 
+        });
+      }
+
+      try {
+        console.log("Upload request received:", {
+          files: req.files,
+          body: req.body,
+          contentType: req.headers['content-type']
+        });
+
+        if (!req.files || !Array.isArray(req.files)) {
+          console.log("No files in request");
+          return res.status(400).json({ message: "No files uploaded" });
+        }
+
+        const uploadedFiles = [];
+        for (const file of req.files) {
+          console.log("Processing file:", file);
+          
+          const fileData = {
+            filename: file.filename,
+            originalName: file.originalname,
+            mimeType: file.mimetype,
+            size: file.size,
+            path: file.path,
+          };
+
+          console.log("File data:", fileData);
+          
+          const validatedData = insertUploadedFileSchema.parse(fileData);
+          const savedFile = await storage.createUploadedFile(validatedData);
+          uploadedFiles.push(savedFile);
+        }
+
+        console.log("Upload successful:", uploadedFiles);
+        res.status(201).json(uploadedFiles);
+      } catch (error) {
+        console.error("Upload processing error:", error);
+        res.status(400).json({ 
+          message: "Failed to process uploaded files",
+          error: error instanceof Error ? error.message : String(error)
+        });
+      }
+    });
   });
 
   app.get("/api/files/:id/content", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      console.log("Serving file content for ID:", id);
       const file = await storage.getUploadedFile(id);
       if (!file) {
+        console.log("File not found for content:", id);
         return res.status(404).json({ message: "File not found" });
       }
 
+      console.log("File path:", file.path);
       if (!fs.existsSync(file.path)) {
+        console.log("Physical file not found:", file.path);
         return res.status(404).json({ message: "File content not found" });
       }
 
@@ -146,6 +208,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Content-Disposition', `inline; filename="${file.originalName}"`);
       res.sendFile(path.resolve(file.path));
     } catch (error) {
+      console.error("Error serving file content:", error);
       res.status(500).json({ message: "Failed to serve file" });
     }
   });

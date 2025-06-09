@@ -40,7 +40,7 @@ export function Minimap({ canvasState, onClose }: MinimapProps) {
               backgroundColor: 
                 node.type === 'text' ? '#6366F1' :
                 node.type === 'image' ? '#10B981' :
-                node.type === 'markdown' ? '#3B82F6' :
+                node.type === 'html' ? '#3B82F6' :
                 node.type === 'pdf' ? '#EF4444' : '#6B7280',
             }}
           />

@@ -159,7 +159,7 @@ export function FileSidebar({ onFileSelect }: FileSidebarProps) {
             type="file"
             className="hidden"
             multiple
-            accept=".md,.pdf,.png,.jpg,.jpeg,.gif,.svg"
+            accept=".html,.pdf,.png,.jpg,.jpeg,.gif,.svg"
             onChange={handleFileInputChange}
           />
         </div>

@@ -18,7 +18,7 @@ export const uploadedFiles = pgTable("uploaded_files", {
 });
 
 // Node types for canvas
-export const NodeType = z.enum(["text", "image", "pdf", "markdown"]);
+export const NodeType = z.enum(["text", "image", "pdf", "html"]);
 
 export const CanvasNode = z.object({
   id: z.string(),

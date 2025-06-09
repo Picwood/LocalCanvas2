@@ -8,13 +8,13 @@ export function formatFileSize(bytes: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-export function getFileType(mimeType: string): 'image' | 'pdf' | 'markdown' | 'text' {
+export function getFileType(mimeType: string): 'image' | 'pdf' | 'html' | 'text' {
   if (mimeType.startsWith('image/')) {
     return 'image';
   } else if (mimeType === 'application/pdf') {
     return 'pdf';
-  } else if (mimeType === 'text/markdown') {
-    return 'markdown';
+  } else if (mimeType === 'text/html') {
+    return 'html';
   } else {
     return 'text';
   }
@@ -27,7 +27,7 @@ export function isValidFileType(mimeType: string): boolean {
     'image/gif',
     'image/svg+xml',
     'application/pdf',
-    'text/markdown',
+    'text/html',
     'text/plain'
   ];
   

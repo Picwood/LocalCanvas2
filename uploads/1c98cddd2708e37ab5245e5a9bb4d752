@@ -1,0 +1,227 @@
+---
+created: 2025-03-24 15:51
+tags:
+  - FEA
+  - simulation
+title: AION36_MONOLITE_BENDING_STATIC
+author: PietroM
+date: 2025-04-04
+project: AION36
+---
+1. [Study Overview](#study-overview)
+2. [Simulation Setup](#simulation-setup)
+   - [Geometry](#geometry)
+   - [Materials](#materials)
+   - [Boundary Conditions](#boundary-conditions)
+   - [Loading](#loading)
+   - [Mesh](#mesh)
+1. [Simulation Steps](#simulation-steps)
+2. [Results](#results)
+   - [Stress Analysis](#stress-analysis)
+   - [Displacement Analysis](#displacement-analysis)
+   - [Other Results](#other-results)
+1. [Conclusions](#conclusions)
+2. [Appendix](#appendix)
+   - [Mesh Details](#mesh-details)
+   - [Material Properties](#material-properties)
+   - [References](#references)
+---
+## 🎯 Study Overview
+  - [ ] [Describe the study overview, including the expected outcomes]
+
+**Goal of the Study:** Evaluate the stresses and displacement of the bottom case in a static load condition using the load of the bending fatigue test
+
+**Key Parameters:**
+Travel:
+
+
+**Expected Outcomes:** 
+
+---
+## 🔧 Simulation Setup
+### Geometry
+- [ ] [Describe the geometry of the model]
+Left side, simmetric
+![[Pasted image 20250414151706.png]]
+
+
+### Materials
+- [ ] [Describe the boundary conditions]
+
+| Property      | Value            | Unit |
+| ------------- | ---------------- | :--: |
+| Name          | Aluminum 6013 T6 |  -   |
+| Density       | 2.71             | g/cc |
+| Young Modulus | 69000            | MPa  |
+| Poisson Ratio | 0.33             |      |
+
+| Property      | Value | Unit |
+| ------------- | ----- | :--: |
+| Name          | AM60B |  -   |
+| Density       | 1.8   | g/cc |
+| Young Modulus | 45000 | MPa  |
+| Poisson Ratio | 0.35  |      |
+### Boundary Conditions
+![[Pasted image 20250414151706.png]]
+- Fixed all displacements, x and y rotations in contact area of the stanchions (yellow surface with green bc)
+- Simmetry plane zy = Fixed rotations on y and z and displacement on x (purple)
+- Surface spring on x on perno (orange)
+![[Pasted image 20250414152400.png]]
+- Rigid body connected to the same point for plain shaft bearings surfaces (on stanchions and bottom case), reference point 2 and 3
+
+### Loading
+2 load conditions
+- F2=-495 N (along y direction)
+![[Pasted image 20250414153005.png]]
+
+- F1=240 N (along y direction)
+![[Pasted image 20250414153117.png]]
+### Mesh
+  - [ ] [Describe the mesh details]
+3 tipes of mesh from 1 to 3 in where in mesh 1 the max elem size is 4 mm to mesh 3 where max elem size is 2 mm
+**Mesh Statistics:**
+MESH 1
+-  Element Type: [S8] Stanchion 
+- Element Type: [C3D10] Bottom case
+- Number of Elements: `= 8996 + 115114` 
+Stanchion: 8996
+Bottom case: 115114
+- Number of Nodes: `= 27092 + 200600 
+Stanchions: 27092
+Bottom case: 200600
+- Element Quality: [PERFECT - no distorted elements]
+
+
+MESH 2
+-  Element Type: [S8] Stanchion 
+- Element Type: [C3D10] Bottom case
+- Number of Elements: `= 8996 + 295129` 
+Stanchion: 8996
+Bottom case: 295129
+- Number of Nodes: `= 27092 + 502671 
+Stanchions: 27092
+Bottom case: 502671
+- Element Quality: [PERFECT - no distorted elements]
+
+
+MESH 3
+-  Element Type: [S8] Stanchion 
+- Element Type: [C3D10] Bottom case
+- Number of Elements: `= 39592 + 9996` 
+Stanchion: 39592
+Bottom case:
+- Number of Nodes: `= 181751 + 47549` 
+Stanchions: 181751
+Bottom case:
+- Element Quality: [PERFECT - no distorted elements]
+
+### Mesh comparison
+  - [ ] [Describe the mesh details]
+  - [ ] ![[Pasted image 20250414165926.png]]
+![[Pasted image 20250414163444.png]]
+![[Pasted image 20250414165154.png]]
+
+|                       | Mesh 1    | Mesh 2    | Mesh 3    | Mesh 4 |
+| --------------------- | --------- | --------- | --------- | ------ |
+| Max element size      | 4 mm      | 2 mm      | 1 mm      |        |
+| TOT number of element | 124114    | 304129    | 930206    |        |
+| Max von mises         | 313.9 MPa | 220.3 MPa | 226.3 MPa |        |
+| Max displacement      | 8.7297 mm | 8.729 mm  | 8.745 mm  |        |
+| Computing time        | 23 s      | 68 s      | 550 s     |        |
+
+---
+## 📊 Simulation Steps
+  - [ ] [Describe simulation steps]
+
+INSERTO MODEL
+
+| Step number / title        |           1 - -495N           |
+| -------------------------- | :---------------------------: |
+| Iterations for convergence |               1               |
+| Convergence criteria       |                               |
+| notes                      |                               |
+| Step number / title        |           2 - +240N           |
+| Iterations for convergence |               1               |
+| Convergence criteria       |                               |
+| notes                      |                               |
+
+
+
+---
+## 📈 Results
+### Stress Analysis 
+
+WITHOUT INSERTO
+#### Von Mises Stress
+![[Pasted image 20250415101329.png]]
+
+**Maximum Von Mises Stress:** 226.3 MPa
+
+#### Principal Stresses
+![[Pasted image 20250415102527.png]]
+![[Pasted image 20250415103405.png]]
+![[Pasted image 20250415103555.png]]
+**Maximum Principal Stresses:**
+- S11 Max: 77.26 MPa
+- S22 Max: 247.9 MPa
+- S33 Max: 214.2 MPa
+
+**Minimum Principal Stresses:**
+- S11 Min: -89.95 MPa
+- S22 Min: -257.8 MPa
+- S33 Min: -214 MPa
+
+
+
+#### Von Mises Stress
+![[Pasted image 20250415103947.png]]
+
+**Maximum Von Mises Stress:** 109.7 MPa
+
+#### Principal Stresses
+![[Pasted image 20250415104532.png]]
+![[Pasted image 20250415104743.png]]
+![[Pasted image 20250415105229.png]]
+**Maximum Principal Stresses:**
+- S11 Max: 43.56 MPa
+- S22 Max: 125 MPa
+- S33 Max: 103.8 MPa
+
+**Minimum Principal Stresses:**
+- S11 Min: -37.46 MPa
+- S22 Min: -120.2 MPa
+- S33 Min: -103.9 MPa
+
+
+
+### Displacement Analysis
+- [ ] [Analysis of displacement results]
+![[Pasted image 20250415110334.png]]
+
+**Maximum Displacement on y:** 8.724 mm
+
+### Other Results
+- [ ] [Any other relevant results]
+
+---
+## 🔍 Conclusions
+- [ ] [Summary of the main findings]
+
+
+**Key Findings:**
+- [Key finding 1]
+
+**Recommendations:**
+- [Recommendation 1]  
+
+---
+## 📑 Appendix
+
+### Mesh Details
+
+### Material Properties
+
+#### [Material 1 name]
+
+### References
+1. [Reference 1]

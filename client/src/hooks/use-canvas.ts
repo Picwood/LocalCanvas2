@@ -6,11 +6,14 @@ export interface CanvasState {
   nodes: CanvasNodeType[];
   connections: CanvasConnectionType[];
   viewport: { x: number; y: number; zoom: number };
+  connectionPreview: { start: { x: number; y: number }; end: { x: number; y: number } } | null;
   setViewport: React.Dispatch<React.SetStateAction<{ x: number; y: number; zoom: number }>>;
+  setConnectionPreview: React.Dispatch<React.SetStateAction<{ start: { x: number; y: number }; end: { x: number; y: number } } | null>>;
   addNode: (nodeData: Partial<CanvasNodeType>) => void;
   updateNode: (nodeId: string, updates: Partial<CanvasNodeType>) => void;
   deleteNode: (nodeId: string) => void;
-  addConnection: (sourceId: string, targetId: string) => void;
+  addConnection: (sourceId: string, targetId: string) => string;
+  updateConnection: (connectionId: string, updates: Partial<CanvasConnectionType>) => void;
   deleteConnection: (connectionId: string) => void;
   addFileNode: (file: UploadedFile) => void;
 }
@@ -19,6 +22,7 @@ export function useCanvas(initialData: CanvasDataType): CanvasState {
   const [nodes, setNodes] = useState<CanvasNodeType[]>(initialData.nodes);
   const [connections, setConnections] = useState<CanvasConnectionType[]>(initialData.connections);
   const [viewport, setViewport] = useState(initialData.viewport);
+  const [connectionPreview, setConnectionPreview] = useState<{ start: { x: number; y: number }; end: { x: number; y: number } } | null>(null);
 
   const addNode = useCallback((nodeData: Partial<CanvasNodeType>) => {
     const newNode: CanvasNodeType = {
@@ -48,8 +52,9 @@ export function useCanvas(initialData: CanvasDataType): CanvasState {
   }, []);
 
   const addConnection = useCallback((sourceId: string, targetId: string) => {
+    const connectionId = nanoid();
     const newConnection: CanvasConnectionType = {
-      id: nanoid(),
+      id: connectionId,
       sourceNodeId: sourceId,
       targetNodeId: targetId,
       style: {
@@ -60,6 +65,13 @@ export function useCanvas(initialData: CanvasDataType): CanvasState {
     };
     
     setConnections(prev => [...prev, newConnection]);
+    return connectionId;
+  }, []);
+
+  const updateConnection = useCallback((connectionId: string, updates: Partial<CanvasConnectionType>) => {
+    setConnections(prev => prev.map(conn => 
+      conn.id === connectionId ? { ...conn, ...updates } : conn
+    ));
   }, []);
 
   const deleteConnection = useCallback((connectionId: string) => {
@@ -76,9 +88,9 @@ export function useCanvas(initialData: CanvasDataType): CanvasState {
     } else if (file.mimeType === "application/pdf") {
       nodeType = "pdf";
       nodeSize = { width: 400, height: 500 };
-    } else if (file.mimeType === "text/markdown" || file.originalName.endsWith(".md")) {
-      nodeType = "markdown";
-      nodeSize = { width: 400, height: 300 };
+    } else if (file.mimeType === "text/html" || file.originalName.endsWith(".html")) {
+      nodeType = "html";
+      nodeSize = { width: 400, height: 400 };
     }
 
     addNode({
@@ -94,14 +106,17 @@ export function useCanvas(initialData: CanvasDataType): CanvasState {
     nodes,
     connections,
     viewport,
+    connectionPreview,
     setViewport,
+    setConnectionPreview,
     addNode,
     updateNode,
     deleteNode,
     addConnection,
+    updateConnection,
     deleteConnection,
     addFileNode,
   };
 }
 
-export type { CanvasNodeType, CanvasState };
+export type { CanvasNodeType };

@@ -26,12 +26,12 @@ export function FloatingToolbar({ canvasState }: FloatingToolbarProps) {
     });
   };
 
-  const handleAddMarkdownNode = () => {
+  const handleAddHtmlNode = () => {
     canvasState.addNode({
-      type: "markdown",
+      type: "html",
       position: { x: 200, y: 200 },
-      size: { width: 400, height: 300 },
-      content: "# Markdown Content\n\nEdit this content...",
+      size: { width: 400, height: 400 },
+      content: "",
     });
   };
 
@@ -81,9 +81,9 @@ export function FloatingToolbar({ canvasState }: FloatingToolbarProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={handleAddMarkdownNode}
+            onClick={handleAddHtmlNode}
             className="p-3 hover:bg-blue-500 text-canvas-text hover:text-white rounded-lg transition-colors"
-            title="Add Markdown"
+            title="Add HTML"
           >
             <FileCode className="w-5 h-5" />
           </Button>

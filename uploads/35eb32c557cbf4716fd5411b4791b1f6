@@ -1,0 +1,206 @@
+---
+created: 2025-03-24 15:51
+tags:
+  - FEA
+  - simulation
+  - report
+title: report_CANNA_WITHOUT_INSERTO
+author: PietroM
+date: 2025-03-24
+project: AION36
+---
+1. [Study Overview](#study-overview)
+2. [Simulation Setup](#simulation-setup)
+   - [Geometry](#geometry)
+   - [Materials](#materials)
+   - [Boundary Conditions](#boundary-conditions)
+   - [Loading](#loading)
+   - [Mesh](#mesh)
+1. [Simulation Steps](#simulation-steps)
+2. [Results](#results)
+   - [Stress Analysis](#stress-analysis)
+   - [Displacement Analysis](#displacement-analysis)
+   - [Other Results](#other-results)
+1. [Conclusions](#conclusions)
+2. [Appendix](#appendix)
+   - [Mesh Details](#mesh-details)
+   - [Material Properties](#material-properties)
+   - [References](#references)
+---
+## 🎯 Study Overview
+  - [ ] [Describe the study overview, including the expected outcomes]
+
+**Goal of the Study:** Evaluate the stresses and displacement of the max interference fit on the stanchions, with and without inserto, in the bending fatigue test. 
+
+**Key Parameters:**
+- Inner diameter crown = 35,78 mm
+- Outer diameter stanchions = 35,98 mm
+- Inner diameter stanchions = 31,15 mm
+- Outer diameter inserto = 31,2 mm
+- Diametral interference crown-stanchions = 0,2 mm
+- Diametral interference stanchions-inserto = 0,05 mm
+
+**Expected Outcomes:** Less displacement with the inserto
+
+---
+## 🔧 Simulation Setup
+### Geometry
+- [ ] [Describe the geometry of the model]
+
+![[Pasted image 20250409164222.png]]
+
+### Materials
+- [ ] [Describe the boundary conditions]
+
+| Property      | Value            | Unit |
+| ------------- | ---------------- | :--: |
+| Name          | Aluminum 6013 T6 |  -   |
+| Density       | 2.71             | g/cc |
+| Young Modulus | 69000            | MPa  |
+| Poisson Ratio | 0.33             |      |
+|               |                  |      |
+
+### Boundary Conditions
+- Fixed all displacements and rotations inner diameter (green)
+- Simmetry plane zy = Fixed rotations on y and z and displacement on x (white)
+- Surface spring on y on top crown (yellow)
+![[Pasted image 20250409170803.png]]
+- Fixed rotation on y and displacements x and y for reference point bottom stanchions (red)
+![[Pasted image 20250409170202.png]]
+
+### Loading
+3 load conditions
+- Only with interference fit, without loads
+- Interference fit + F2=495 N (along z direction)
+![[Pasted image 20250411093458.png]]
+
+-  Interference fit + F1=-240 N (along z direction)
+![[Pasted image 20250411093600.png]]
+### Mesh
+  - [ ] [Describe the mesh details]
+**Mesh Statistics:**
+-  Element Type: [C3D20R] Stanchion 
+- Element Type: [C3D20R] Crown interface
+- Element Type: [C3D20R] Crown
+- Number of Elements: `= 39592 + 9996` 
+Stanchion: 39592
+Crown interface
+Crown 
+- Number of Nodes: `= 181751 + 47549` 
+Stanchions: 181751
+Crown interface
+Crown
+- Element Quality: [PERFECT - no distorted elements]
+---
+## 📊 Simulation Steps
+  - [ ] [Describe simulation steps]
+
+| Step number / title        |        1 - Initial interference solving         |
+| -------------------------- | :---------------------------------------------: |
+| Iterations for convergence |                        6                        |
+| Convergence criteria       |                                                 |
+| notes                      | No added loading - Part fixed away from contact |
+| Step number / title        |             2 - Interference + 495N             |
+| Iterations for convergence |                        6                        |
+| Convergence criteria       |                                                 |
+| notes                      |                                                 |
+| Step number / title        |            3 - Interference + -240N             |
+| Iterations for convergence |                        6                        |
+| Convergence criteria       |                                                 |
+| notes                      |                                                 |
+
+---
+## 📈 Results
+### Stress Analysis 
+
+WITHOUT INSERTO
+#### Von Mises Stress
+![[Pasted image 20250411101232.png]]
+
+**Maximum Von Mises Stress:** 330.9 MPa
+
+#### Principal Stresses
+![[Pasted image 20250411120614.png]]
+![[Pasted image 20250411121059.png]]
+![[Pasted image 20250411121435.png]]
+**Maximum Principal Stresses:**
+- S11 Max: 263 MPa
+- S22 Max: 97.26 MPa
+- S33 Max: 249 MPa
+
+**Minimum Principal Stresses:**
+- S11 Min: -313.1 MPa
+- S22 Min: -175.6 MPa
+- S33 Min: -312.1 MPa
+
+
+
+#### Von Mises Stress
+![[Pasted image 20250411122539.png]]
+
+**Maximum Von Mises Stress:** 388.4 MPa
+
+#### Principal Stresses
+![[Pasted image 20250411122844.png]]
+![[Pasted image 20250411122949.png]]
+![[Pasted image 20250411124027.png]]
+**Maximum Principal Stresses:**
+- S11 Max: 294.6 MPa
+- S22 Max: 96.04 MPa
+- S33 Max: 302.2 MPa
+
+**Minimum Principal Stresses:**
+- S11 Min: -378.2 MPa
+- S22 Min: -199.3 MPa
+- S33 Min: -314.1 MPa
+
+
+#### Von Mises Stress
+![[Pasted image 20250411130120.png]]
+
+**Maximum Von Mises Stress:** 382 MPa
+
+#### Principal Stresses
+![[Pasted image 20250411125915.png]]
+![[Pasted image 20250411130407.png]]
+![[Pasted image 20250411130547.png]]
+**Maximum Principal Stresses:**
+- S11 Max: 299.8 MPa
+- S22 Max: 108.1 MPa
+- S33 Max: 266.7 MPa
+
+**Minimum Principal Stresses:**
+- S11 Min: -340.5 MPa
+- S22 Min: -205 MPa
+- S33 Min: -313.2 MPa
+### Displacement Analysis
+- [ ] [Analysis of displacement results]
+*insert images*
+
+**Maximum Displacement:** [Maximum displacement value] mm
+
+### Other Results
+- [ ] [Any other relevant results]
+
+---
+## 🔍 Conclusions
+- [ ] [Summary of the main findings]
+
+
+**Key Findings:**
+- [Key finding 1]
+
+**Recommendations:**
+- [Recommendation 1]  
+
+---
+## 📑 Appendix
+
+### Mesh Details
+
+### Material Properties
+
+#### [Material 1 name]
+
+### References
+1. [Reference 1]

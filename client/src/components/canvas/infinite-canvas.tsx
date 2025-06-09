@@ -15,6 +15,11 @@ export function InfiniteCanvas({ canvasState }: InfiniteCanvasProps) {
     if (e.target === containerRef.current) {
       isPanningRef.current = true;
       lastPanPositionRef.current = { x: e.clientX, y: e.clientY };
+      
+      // Deselect all nodes when clicking on empty canvas
+      const event = new CustomEvent('canvas-click', { detail: { deselectAll: true } });
+      document.dispatchEvent(event);
+      
       e.preventDefault();
     }
   }, []);
@@ -41,11 +46,32 @@ export function InfiniteCanvas({ canvasState }: InfiniteCanvasProps) {
   const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
     const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+    const rect = containerRef.current?.getBoundingClientRect();
     
-    canvasState.setViewport(prev => ({
-      ...prev,
-      zoom: Math.max(0.1, Math.min(3, prev.zoom * zoomFactor))
-    }));
+    if (rect) {
+      // Get mouse position relative to canvas
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      canvasState.setViewport(prev => {
+        const newZoom = Math.max(0.1, Math.min(3, prev.zoom * zoomFactor));
+        
+        // Calculate zoom center point
+        const zoomCenterX = (mouseX - prev.x) / prev.zoom;
+        const zoomCenterY = (mouseY - prev.y) / prev.zoom;
+        
+        // Adjust viewport to keep zoom centered on mouse
+        const newX = mouseX - zoomCenterX * newZoom;
+        const newY = mouseY - zoomCenterY * newZoom;
+        
+        return {
+          ...prev,
+          zoom: newZoom,
+          x: newX,
+          y: newY
+        };
+      });
+    }
   }, [canvasState]);
 
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
@@ -81,6 +107,7 @@ export function InfiniteCanvas({ canvasState }: InfiniteCanvasProps) {
       className="w-full h-full relative cursor-grab active:cursor-grabbing"
       onMouseDown={handleMouseDown}
       onContextMenu={handleContextMenu}
+      data-canvas-container
     >
       {/* Grid Background */}
       <div 
@@ -102,6 +129,7 @@ export function InfiniteCanvas({ canvasState }: InfiniteCanvasProps) {
       >
         {/* Connection Lines */}
         <svg className="absolute inset-0 pointer-events-none z-10 w-full h-full">
+          {/* Existing connections */}
           {canvasState.connections.map((connection) => {
             const sourceNode = canvasState.nodes.find(n => n.id === connection.sourceNodeId);
             const targetNode = canvasState.nodes.find(n => n.id === connection.targetNodeId);
@@ -135,6 +163,20 @@ export function InfiniteCanvas({ canvasState }: InfiniteCanvasProps) {
               </g>
             );
           })}
+          
+          {/* Connection preview line */}
+          {canvasState.connectionPreview && (
+            <line
+              x1={canvasState.connectionPreview.start.x}
+              y1={canvasState.connectionPreview.start.y}
+              x2={canvasState.connectionPreview.end.x}
+              y2={canvasState.connectionPreview.end.y}
+              stroke="#F59E0B"
+              strokeWidth={3}
+              strokeDasharray="8,4"
+              className="opacity-80"
+            />
+          )}
         </svg>
         
         {/* Nodes */}
